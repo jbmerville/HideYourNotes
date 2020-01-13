@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <style> 
+    .button, .blue {
+      width: -webkit-fill-available;
+      margin: 10px 10px;
+      font-size: 1.3em;
+      position: relative;
+    }
+    b {
+      position: relative;
+      float: left;
+      width: 100%;
+    }
+    .branding-below {
+      bottom: 56px;
+      position: relative;
+      top: 0;
+    }
+    .branding-text {
+      left: 7px;
+      position: relative;
+      top: 3px;
+    }
+    .col-contain {
+      overflow: hidden;
+    }
+    .col-one {
+      position: relative;
+      float: left;
+      width: 50%;
+      height: fit-content;
+    }
+    .logo {
+      vertical-align: middle;
+    }
+    .radio-spacer {
+      height: 20px;
+    }
+    .width-100 {
+      width: 100%;
+    }
+    input[type="checkbox"]{
+      margin: 20px 8px 0 0;
+    }
+    select {
+      visibility: hidden;
+      position: relative;
+      margin-bottom: 5px;
+      width: 100%;
+      white-space: pre;
+    }
+    input[type="number"]{
+      width: 50px;
+    }
+    .color-container {
+      visibility: hidden;
+      position: relative;
+      display: block;
+      margin-bottom: 3px;
+    }
+    .toSelect {
+      width: 50%;
+      top: 165px;
+      float: right;
+      position: relative;
+
+     }
+    .title {
+      margin: 0;
+      font-size: 1em;
+      display: block;
+    }
+    .color {
+      display: inline-block;
+      position: relative;
+      height: 15px;
+      cursor: pointer;
+      width: 15px;
+      margin-right: 3px;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+    }
+    .outline {
+      top: -2px;
+      left: -2px;
+      position: relative;
+      height: 17px;
+      width: 17px;
+      visibility: hidden;
+      border: 1px solid black;
+    }
+    .color:hover .outline {
+      visibility: visible;
+    }
+    .error {
+      margin-left: 10px;
+     }
+    
+    </style>
+  </head>
+  <body>
+  <div class="sidebar branding-below">
+      <form>
+        <div class="block col-contain">
+        <b>Select to hide:</b>
+          <div class="col-one">
+            <div>
+              <input type="checkbox" name="origin" id="italic" value="" >
+              <label for="radio-origin-auto">Italic</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="bold" checked="">
+              <label for="radio-origin-en">Bold</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="underline">
+              <label for="radio-origin-fr">Underlined</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="equation">
+              <label for="radio-origin-de">Equation</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="font" value="" >
+              <label for="radio-origin-auto">Font</label>
+              
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="font-size" value="" >
+              <label for="radio-origin-auto">Font Size</label>
+            </div>
+             <div>
+              <input type="checkbox" name="origin" id="font-color" value="" >
+              <label for="radio-origin-auto">Font Color</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="image" value="" >
+              <label for="radio-origin-auto">Image</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="toSelect" value="" checked="checked">
+              <label for="radio-origin-auto">Selected</label>
+            </div>
+            <div>
+              <input type="checkbox" name="origin" id="invert" value="" checked="checked">
+              <label for="radio-origin-auto">Everything but options selected</label>
+            </div>
+          </div>
+          <div class="toSelect">
+            <select>
+                <option>Amaranth</option>
+                <option>Arial</option>
+                <option>Arvo</option>
+                <option>Calibri</option>
+                <option>Cambria</option>
+                <option>Comic Sans MS</option>
+                <option>Consolas</option>
+                <option>Corsiva</option>
+                <option>Courier New</option>
+                <option>Dancing Script</option>
+                <option>Droid Sans</option>
+                <option>Garamond</option>
+                <option>Georgia</option>
+                <option>Gloria Hallelujah</option>
+                <option>Great Vibes</option>
+                <option>Lobster</option>
+                <option>Merriweather</option>
+                <option>Pacifico</option>
+                <option>Philosopher</option>
+                <option>Poiret One</option>
+                <option>Quattrocento</option>
+                <option>Roboto</option>
+                <option>Shadows Into Light</option>
+                <option>Syncopate</option>
+                <option>Tahoma</option>
+                <option>Times New Roman</option>
+                <option>Trebuchet MS</option>
+                <option>Ubuntu</option>
+                <option>Verdana</option>     
+            </select>
+            <select>
+            </select>
+            <div class="color-container"></div>
+            <div class="color-container"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <button class="button blue" id="hide">Hide</button>
+    <script> 
+    
+    $("#hide").click(hideShow);
+    $("input:checkbox").click(checked);
+    
+    // Run server side doc analyse for font size, color and highlight
+    $(document).ready(function()
+    {
+      google.script.run.withSuccessHandler(setOptionsFontSize).getDocAttributes(1);
+      google.script.run.withSuccessHandler(setOptionsFontColors).getDocAttributes(2);
+      google.script.run.withSuccessHandler(setOptionsHighlight).getDocAttributes(3);
+    });
+    
+    // Set the select dom element for font size found in doc
+    function setOptionsFontSize(att)
+    {
+      for(n = 0; n < att.length; n++)
+      {
+        $(".toSelect").children().eq(1).append("<option>" + att[n] + "</option>");
+      }
+    }
+    
+    // Set the color picker dom element for font colors found in doc
+    function setOptionsFontColors(att)
+    {
+      $(".toSelect").children().eq(2).append("<p class='title'>Font Colors:</p>");
+        for(n = 1; n <= att.length; n++)
+      {
+        $(".toSelect").children().eq(2).append("<div class='color'><div class='outline'></div></div>");
+        $(".toSelect").children().eq(2).children().eq(n).css({"background-color":  att[n-1] });
+        $(".toSelect").children().eq(2).children().eq(n).attr({"id": att[n-1] });
+        if(att[n-1] == "#ffffff") $(".toSelect").children().eq(2).children().eq(n).css({"border": "1px solid gray", "outline-offset": "-1px"});
+      }
+      $(".outline").click(checkmark);
+    }
+    
+    // Set the color picker dom element for highlight color found in doc
+    function setOptionsHighlight(att)
+    {
+      $(".toSelect").children().eq(3).append("<p class='title'>Highlight Colors:</p>");
+      for(n = att.length; n >= 1 ; n--)
+      {
+        $(".toSelect").children().eq(3).append("<div class='color'><div class='outline'></div></div>");
+        $(".toSelect").children().eq(3).children().eq(n).css({"background-color":  att[n-1] });
+        $(".toSelect").children().eq(3).children().eq(n).attr({"id": att[n-1] });
+        if(att[n-1] == "#ffffff") $(".toSelect").children().eq(3).children().eq(n).css({"outline": "1px solid gray", "outline-offset": "-1px"});
+      }
+    }
+    
+    function hideShow()
+    {
+      var attributes = [];
+      for(n = 0; n < $(".col-one").children().length; n++)
+      {
+        attributes.push($(".col-one").children().eq(n).children().eq(0).is(':checked'));
+        if( $(".col-one").children().eq(n).children().eq(0).is(':checked') && n == 4 ) attributes[n] = $(".toSelect").children().eq(0).val();
+        if( $(".col-one").children().eq(n).children().eq(0).is(':checked') && n == 5 ) attributes[n] = $(".toSelect").children().eq(1).val();
+        if( $(".col-one").children().eq(n).children().eq(0).is(':checked') && n == 6 )
+        {
+          for(i = 1; i < $(".toSelect").children().eq(2).children().length; i++)
+          {
+            if( $(".toSelect").children().eq(2).children().eq(i).hasClass("checked") ) attributes[n] += "." + $(".toSelect").children().eq(2).children().eq(i).attr("id");
+          }
+        }
+        if( $(".col-one").children().eq(n).children().eq(0).is(':checked') && n == 7 )
+        {
+          for(i = 1; i < $(".toSelect").children().eq(3).children().length; i++)
+          {
+            if( $(".toSelect").children().eq(3).children().eq(i).hasClass("checked") ) attributes[n] += "." + $(".toSelect").children().eq(3).children().eq(i).attr("id");
+          }
+        }    
+       }
+      for(x = 0; x < attributes.length; x++)
+      {
+        var error;
+        if(attributes[x] != false)
+        {
+          error = false;
+          break;
+        } else 
+        {
+          error = true;
+        }
+      }
+      if(error) showError("Please select an attribute to hide.", "button");
+      else $(".error").remove();
+      var hideOrShow;
+      if(!error)
+      {
+        console.log(attributes);
+        if($("#hide").html() == "Hide")
+        {
+          hideOrShow = true;
+          $("#hide").removeClass("blue");
+          $("#hide").html("Show");
+          google.script.run.hide(hideOrShow, attributes);
+        } else 
+        {
+          hideOrShow = false;
+          $("#hide").html("Hide");
+          $("#hide").addClass("blue");
+          google.script.run.hide(hideOrShow, attributes);
+        }
+      }
+    }
+    
+    // Show select elements corresponding to the attributes checked.
+    function checked(){
+    var index = $(this).parent().index() - $("#font").parent().index();
+      if(index >= 0)
+      {
+        if($(".toSelect").children().eq(index).css("visibility") == "hidden")
+        {
+          $(".toSelect").children().eq(index).css({"visibility": "visible"});
+        } else
+        {
+          $(".toSelect").children().eq(index).css({"visibility": "hidden"});
+        }
+      }
+    }
+
+    // Add a checkmark on the color selected when clicked
+    function checkmark(){
+      if($(this).parent().css("background-image") == "none")
+      {
+        $(this).parent().css({"background-image": "url(//ssl.gstatic.com/ui/v1/colorpicker/checkmark.png)"});
+        $(this).parent().addClass("checked");
+      } else
+      {
+        $(this).parent().css({"background-image": "none"});
+        $(this).parent().removeClass("checked");
+      }
+    }
+    
+    // Error message handler
+    function showError(msg, element) {
+      var div = $('<div class="error">' + msg + '</div>');
+      if(!$(".error").length) $(element).after(div);
+    }
+    </script>
+  </body>
+</html>
